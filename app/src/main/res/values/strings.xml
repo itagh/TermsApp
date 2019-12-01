@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <array name="Sections">
+        <item>مصطلحات أدوات تفصيل والحياكة</item>
+        <item>مصطلحات الرسم والتصميم</item>
+        <item>مصطلحات أقمشة الملابس</item>
+        <item>مصطلحات عامة للملابس</item>
+        <item>مصطلحات ماكينة الخياطة</item>
+    </array>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>
