@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,8 +42,13 @@ public class Main2Activity extends AppCompatActivity {
      List <Terms> termlist ;
     ArrayList<String> array_list;
     ArrayAdapter arrayAdapter;
+
+    ArrayList<String> array_key;
      ListView listViewTerms;
-     DatabaseReference TermsDB;
+     DatabaseReference TermsDB,root , ab;
+    String TermsID;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,7 @@ public class Main2Activity extends AppCompatActivity {
         listViewTerms = (ListView) findViewById(R.id.listViewTerms);
         termlist = new ArrayList<>();
         array_list = new ArrayList<>();
+
 
         //activity_main3
        /* ArTerm = (TextView) findViewById(R.id.ArTerm);
@@ -110,23 +117,31 @@ public class Main2Activity extends AppCompatActivity {
         //Intent intent = new Intent(this, Main3Activity.class);
        // startActivity(intent);
 
-        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Drawing");
+        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Knitting_and_Tailoring");
+        root = FirebaseDatabase.getInstance().getReference().child("Terms_of_Drawing").child("Term_id_201").getRoot();
 
         TermsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot) {
-                List<String> list = new ArrayList<>();
+                ArrayList<String> list = new ArrayList<>();
+
+                List<String> key = new ArrayList<>();
 //                toastmsg(String.valueOf(dataSnapshot.getChildrenCount()));
-                termlist.clear();
+                  termlist.clear();
                 for(DataSnapshot termsSnapshot : dataSnapshot.getChildren()){
                     //Terms terms = termsSnapshot.getValue(Terms.class);
                     //termlist.add(terms);
                     String title1 = termsSnapshot.child("arterm").getValue(String.class);
+                    long termID=  termsSnapshot.child("Term_id_101").getChildrenCount();
+                   // Log.d("hi"," ** "+ root);
+
                     //String title2 = termsSnapshot.child("ardef").getValue(String.class);
                     //String title3 = termsSnapshot.child("enterm").getValue(String.class);
                    // String title4 = termsSnapshot.child("endef").getValue(String.class);
-                    list.add(title1 + " " );
-//+ title2 + " " +title3 + " " +title4
+                    list.add(title1 + " " ); //+ title2 + " " +title3 + " " +title4
+
+                    array_key = new ArrayList<>(list);
+                    //Log.d("Key is ","  KEY IS = "+termID);
                 }
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
@@ -135,11 +150,25 @@ public class Main2Activity extends AppCompatActivity {
                 listViewTerms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //Toast.makeText(Main2Activity.this,"ok"+position , Toast.LENGTH_SHORT).show();
-                        Move();
+                        int index = position+1 ;
+                        //long ID = id;
+                        String idd = Integer.toString(index);
+                        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Knitting_and_Tailoring").child("Term_id_10"+idd);
+                        Log.d("here", ""+ TermsDB);
+
+
+
+
+
+
+
+
+
+
+
+                      //  Move();
                     }
                 });
-
 
 //                TermsList adapter = new TermsList(Main2Activity.this,termlist);
 //                listViewTerms.setAdapter(adapter);
@@ -151,7 +180,6 @@ public class Main2Activity extends AppCompatActivity {
 //                listViewTerms.setAdapter(arrayAdapter);
 
 //                toastmsg(td.values().toArray()[0].toString());
-
 
                /* String ArD = dataSnapshot.child("ardef").getValue().toString();
                 String ArT = dataSnapshot.child("arterm").getValue().toString();
@@ -166,11 +194,8 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // to do later
-
             }
         });
-
-
     }
 
     public void toastmsg(CharSequence text){
@@ -179,9 +204,13 @@ public class Main2Activity extends AppCompatActivity {
         Toast toast = Toast.makeText(context,text,duration);
         toast.show();
     }
-
     private void Move(){
         Intent intent =  new Intent(this,Main3Activity.class);
         startActivity(intent);
+    }
+
+
+    public void getdata(){
+
     }
 }
