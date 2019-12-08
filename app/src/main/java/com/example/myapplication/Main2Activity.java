@@ -39,11 +39,11 @@ public class Main2Activity extends AppCompatActivity {
      EditText ARTerm, ENTerm, ARDef, ENDef;
      Spinner Sections;
      private TextView ArTerm, EnTerm, ArDef, EnDef;
-     List <Terms> termlist ;
+     List <Terms> termlist , details;
     ArrayList<String> array_list;
     ArrayAdapter arrayAdapter;
 
-    ArrayList<String> array_key;
+    ArrayList<String> array_key , detailsArray;
      ListView listViewTerms;
      DatabaseReference TermsDB,root , ab;
     String TermsID;
@@ -67,14 +67,15 @@ public class Main2Activity extends AppCompatActivity {
 
         listViewTerms = (ListView) findViewById(R.id.listViewTerms);
         termlist = new ArrayList<>();
+        details = new ArrayList<>();
         array_list = new ArrayList<>();
 
 
         //activity_main3
-       /* ArTerm = (TextView) findViewById(R.id.ArTerm);
+        ArTerm = (TextView) findViewById(R.id.ArTerm);
         EnTerm = (TextView) findViewById(R.id.EnTerm);
         ArDef = (TextView) findViewById(R.id.ArDef);
-        EnDef = (TextView) findViewById(R.id.EnDef);*/
+        EnDef = (TextView) findViewById(R.id.EnDef);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,8 +118,8 @@ public class Main2Activity extends AppCompatActivity {
         //Intent intent = new Intent(this, Main3Activity.class);
        // startActivity(intent);
 
-        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Knitting_and_Tailoring");
-        root = FirebaseDatabase.getInstance().getReference().child("Terms_of_Drawing").child("Term_id_201").getRoot();
+        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Drawing");
+        //root = FirebaseDatabase.getInstance().getReference().child("Terms_of_Drawing").child("Term_id_201").getRoot();
 
         TermsDB.addValueEventListener(new ValueEventListener() {
             @Override
@@ -153,20 +154,36 @@ public class Main2Activity extends AppCompatActivity {
                         int index = position+1 ;
                         //long ID = id;
                         String idd = Integer.toString(index);
-                        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Knitting_and_Tailoring").child("Term_id_10"+idd);
-                        Log.d("here", ""+ TermsDB);
+                        TermsDB = FirebaseDatabase.getInstance().getReference().child("Terms_of_Drawing").child("Term_id_20"+idd);
+                        //Log.d("here", ""+ TermsDB);
+                        TermsDB.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ArrayList<String> detailslist = new ArrayList<>();
+                                List<String> key1 = new ArrayList<>();
+                                details.clear();
+                                for(DataSnapshot detailsSnapshot : dataSnapshot.getChildren()){
+                                    String at = detailsSnapshot.child("arterm").getValue(String.class);
+                                    String ad = detailsSnapshot.child("ardef").getValue(String.class);
+                                    String et = detailsSnapshot.child("enterm").getValue(String.class);
+                                    String ed = detailsSnapshot.child("endef").getValue(String.class);
+                                   // Log.d("test", "" + at +" "+ad + " "+ et+" "+ed);
+                                    detailslist.add(at +" "+ad + " "+ et+" "+ed);
+                                     Log.d("test", ""+detailslist);
+                                    detailsArray = new ArrayList<>(detailslist);
+                                    ArTerm.setText(detailslist.get(0));
+                                    ArDef.setText(detailslist.get(1));
+                                    EnTerm.setText(detailslist.get(2));
+                                    EnDef.setText(detailslist.get(3));
+                                }
 
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-
-
-
-
-
-
-
-
-
-                      //  Move();
+                            }
+                        });
+                        Move();
                     }
                 });
 
@@ -204,13 +221,10 @@ public class Main2Activity extends AppCompatActivity {
         Toast toast = Toast.makeText(context,text,duration);
         toast.show();
     }
+
     private void Move(){
         Intent intent =  new Intent(this,Main3Activity.class);
         startActivity(intent);
     }
 
-
-    public void getdata(){
-
-    }
 }

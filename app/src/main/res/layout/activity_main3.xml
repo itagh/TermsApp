@@ -44,4 +44,15 @@
         android:layout_marginTop="276dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EnTerm" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="192dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="36dp"
+        android:text="عرض المصطلح"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
